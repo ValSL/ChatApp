@@ -1,3 +1,4 @@
+using ChatApp.Hubs;
 using ChatApp.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -15,6 +16,8 @@ builder.Services.AddDbContext<UsersContext>(options => options.UseSqlServer(buil
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie(options => options.LoginPath = "/login");
 builder.Services.AddAuthorization();
 builder.Services.AddIdentity<User, IdentityRole>().AddEntityFrameworkStores<UsersContext>();
+builder.Services.AddRazorPages();
+builder.Services.AddSignalR();
 
 var app = builder.Build();
 
@@ -31,6 +34,9 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapRazorPages();
+app.MapHub<ChatHub>("/chatHub");
 
 app.MapControllerRoute(
     name: "default",
